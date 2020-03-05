@@ -1,0 +1,27 @@
+---
+- name: get the google-chrome package
+  command: ls -lrt "{{ defaultdirectory }}"| grep -i chrome
+  register: command_output 
+
+-  set_fact: google-version="{{ command_output.stdout }}"
+
+- debug:
+    msg: google-version
+
+- name: changing google to bin
+  command: cd "{{defaultdirectory}}" && mkdir -p bin && mv google-version  bin/
+
+- name: Adding the path in the bashrc files for postgresql
+  lineinfile: dest= ~/.bashrc line='export PATH=$PATH:"{{ defaultdirectory }}"bin' insertafter='EOF' 
+
+- name: Source the bashrc file
+  shell: source ~/.bashrc
+
+#- name: making the xhost enabale
+#  command: sudo xhost enable
+#  commad: xhost +SI:localuser:"{{ username }}"
+#  ignore_errors: yes
+
+#- name: checking the google is working or not
+#  command: google-chrome
+#  ignore_errors: yes

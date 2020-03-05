@@ -1,0 +1,32 @@
+---
+- name: add the key for postgresql
+  apt_key:
+    url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+    state: present
+
+- name: add the repository
+  apt_repository:
+    repo: deb http://apt.postgresql.org/pub/repos/apt bionic-pgdg main
+    state: present
+ 
+- name: Upgrade all packages to the latest version
+  apt:
+    name: "*"
+    state: latest
+
+- name: insatll postgresql
+  apt:
+    name: "{{ postgresqlversion }}"
+    state: present
+
+- name: adding postgresql path to the users bashrc
+  lineinfile:
+    path: /home/vagrant/.bashrc
+    line: export PATH="/usr/lib/postgresql/{{ postgresqlversionnuber }}/bin:$PATH"
+    state: present
+
+- name: adding postgresql path to the users bashrc
+  lineinfile:
+    path: /home/vagrant/.profile
+    line: export PATH="/usr/lib/postgresql/{{ postgresqlversionnuber }}/bin:$PATH"
+    state: present

@@ -1,0 +1,36 @@
+---
+- name:
+  shell: cd /opt/encode && rm -rf "{{jdktarfile}}"
+  ignore_errors: yes
+
+- name: Download Tomcat using get_url
+  get_url:
+    url: "{{elasticsearchurl}}"
+    dest: /opt/encode/
+    mode: 0777
+
+- name:  Extract elastictarfile to the path 
+  shell: "tar xvfz {{ defaultdirectory }}/{{ elasticversion }}"
+  args:
+    chdir: "{{ defaultdirectory }}"
+  register: elasticsearchinstall
+
+- debug: msg="{{ elasticsearchinstall.stdout_lines[0] }}"
+
+- name: change the permissions
+  file: path="{{defaultdirectory}}{{ elasticsearchinstall.stdout_lines[0] }}" owner="{{ username }}" group="{{ username }}" recurse=yes
+
+
+- debug: msg="{{ elasticsearchinstall.stdout_lines[41] }}"
+
+- name: adding the line in the file.
+  lineinfile:
+    path: /home/vagrant/.bashrc 
+    line: export PATH="{{ defaultdirectory }}{{ elasticsearchinstall.stdout_lines[41] }}:$PATH"
+    state: present
+
+- name: adding the line in the file.
+  lineinfile:
+    path: /home/vagrant/.profile
+    line: export PATH="{{ defaultdirectory }}{{ elasticsearchinstall.stdout_lines[41] }}:$PATH"
+    state: present

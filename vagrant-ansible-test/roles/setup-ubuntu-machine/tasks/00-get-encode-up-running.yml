@@ -1,0 +1,103 @@
+---
+- name: install python virtualenv 
+  command: sudo apt install -y python3-venv
+
+- name: create the virtual env directory
+  shell:
+    cmd: python"{{pythonvirtualenvversion}}" -m venv "{{pythonvirtualenv}}"
+    creates: "{{pythonvirtualenv}}"
+    chdir: "{{defaultdirectory}}{{pythonvirtualenvdirectory}}"
+  
+- name: adding the line in the file.
+  lineinfile:
+    path: /home/{{username}}/.bashrc 
+    line: source "{{defaultdirectory}}{{pythonvirtualenvdirectory}}/{{pythonvirtualenv}}"/bin/activate
+    state: present
+
+- name: adding the line in the file.
+  lineinfile:
+    path: /home/{{username}}/.profile
+    line: source "{{defaultdirectory}}{{pythonvirtualenvdirectory}}/{{pythonvirtualenv}}"/bin/activate
+    state: present
+
+- name: Make virtual environment
+  shell: source /home/{{username}}/.bashrc
+  args:
+    executable: /bin/bash
+
+- name: Make virtual environment
+  shell: source /home/{{username}}/.profile
+  args:
+    executable: /bin/bash
+
+- name: install npm
+  apt: name=npm state=present 
+
+- name: insatll required pacakges pip3
+  shell:
+    cmd: sudo pip3 install -U zc.buildout setuptools
+
+- name: install the helper for nvm
+  command: sudo npm install -g n
+
+- name: install node 10
+  become_user: "{{username}}"
+  command: sudo n {{nodeversion}}
+
+- name: make clean 
+  shell: 
+    cmd: make clean
+    chdir: /opt/encoded/
+
+- name: buidout
+  shell:
+    cmd: buildout bootstrap
+    chdir: /opt/encoded/
+
+- name: buidout
+  shell: sudo nohup bin/buildout > /opt/encode/buildout.log 2>&1&
+  args:
+    chdir: /opt/encoded/
+    executable: /bin/bash
+
+- pause:
+    minutes: 8
+
+#- name: buidout
+#  shell: source /home/{{username}}/.profile && nohup bin/test -m "not bdd" > /opt/encode/notbddtest.log 2>&1&
+#  args:
+#    chdir: /opt/encoded/
+#    executable: /bin/bash
+
+#- pause:
+#    minutes: 15
+
+- name: insatll required pacakges pip3
+  shell:
+    cmd: sudo pip3 install zope.deprecation
+
+
+- name: change the permissions of the varlognginx
+  shell:
+    cmd: sudo chmod 777 /var/log/nginx/
+    cmd: sudo chmod 777 /var/lib/nginx/
+
+- name: check the file
+  become_user: "{{username}}"
+  shell: source /home/{{username}}/.profile && nohup bin/dev-servers development.ini --app-name app --clear --init --load > /opt/encode/dev-servers.log 2>&1&
+  args:
+    chdir: /opt/encoded/
+    executable: /bin/bash
+
+- pause:
+    minutes: 4
+
+- name: command
+  shell: ln -s /var/run/postgresql/.s.PGSQL.5432 /tmp/snovault/pgdata/.s.PGSQL.5432
+  shell: sudo chmod 777 /tmp/snovault/pgdata/.s.PGSQL.5432
+
+- name: check the file
+  shell: source /home/{{username}}/.profile && nohup bin/pserve development.ini > /opt/encode/pserve.log 2>&1&
+  args:
+    chdir: /opt/encoded/
+    executable: /bin/bash

@@ -1,0 +1,43 @@
+---
+jdkversion: jdk-11.0.6
+jdktarfile: jdk-11.0.6_linux-x64_bin.tar
+elasticversion: elasticsearch-5.6.16.tar.gz
+pythonvirtualenvversion: 3.6
+nodeversion: 10.14.0
+defaultdirectory: /opt/encode/
+pythonvirtualenvdirectory: python_environment
+pythonvirtualenv: python3env
+username: vagrant
+groupname: vagrant
+postgresqlversion: postgresql-11
+postgresqlversionnuber: 11
+elasticsearchurl: https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.16.tar.gz
+requiredpackages:
+ - awscli
+ - unattended-upgrades
+ - apache2
+ - apache2-utils
+ - ssl-cert
+ - libapache2-mod-wsgi-py3
+ - bsdtar
+ - libjpeg8-dev
+ - zlib1g-dev
+ - apt-transport-https
+ - nodejs
+ - g++
+ - gcc
+ - make
+ - nginx
+ - libpq-dev
+ - daemontools
+ - postgresql-11
+ - build-essential
+ - libffi-dev
+ - libssl-dev
+ - python3.6-dev
+ - python3-pip
+ - python3.6-venv
+ - software-properties-common
+ - redis-server
+ - lzop
+ - net-tools 

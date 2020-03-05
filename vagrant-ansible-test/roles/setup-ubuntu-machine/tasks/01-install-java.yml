@@ -1,0 +1,36 @@
+---
+- name: "Create a directory if not exists"
+  file:
+   path: "{{defaultdirectory}}" 
+   state: directory
+   mode: 0777
+   group: "{{username}}"
+   owner: "{{username}}"
+
+- name: "Create a directory if not exists"
+  file:
+   path: "{{defaultdirectory}}/{{pythonvirtualenvdirectory}}"
+   state: directory
+   mode: 0777
+   group: "{{username}}"
+   owner: "{{username}}"
+
+- name: copy the file from the tmp folder to the "{{defaultdirectory}}"
+  command: cp -r /opt/"{{jdktarfile}}" "{{defaultdirectory}}"
+
+- name: create a directory and unzip the java file
+  file:
+   path: /usr/lib/jvm
+   state: directory
+   mode: 777
+   group: "{{username}}"
+   owner: "{{username}}"
+
+- name: set the alternatives
+  command: sudo tar -xvf "{{defaultdirectory}}{{jdktarfile}}"  --directory /usr/lib/jvm/
+
+- name:  change the permisions for the java 
+  command: sudo chmod 755 /usr/lib/jvm
+
+- name: setting the java-alternatives
+  shell: sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/"{{jdkversion}}"/bin/java 100
