@@ -1,9 +1,9 @@
 #!/bin/bash
 export user_name='vagrant'
 export home_dir='/home/vagrant'
-export venv_dir="$home_dir/encoded-venv"
-export install_files_dir="$home_dir/mac-files"
-export encd_dir="$install_files_dir/encoded"
+export venv_dir="$home_dir/.encoded-venv"
+export encd_dir="$home_dir/encoded"
+export devservers_dir="$home_dir/.devservers-encoded"
 
 export es_install_dir='/opt/elasticsearch'
 export es_package_name='elasticsearch-5.4.3'
@@ -85,7 +85,7 @@ echo -e "\n\n$msg"
 if [ -d "$venv_dir" ]; then
     echo -e "\tAlready installed"
 else
-    cat $install_files_dir/devservers-encoded/apt-installs.txt | xargs sudo apt install -y
+    cat $devservers_dir/apt-installs.txt | xargs sudo apt install -y
 fi
 echo -e "\n"
 echo -e "DONE $msg"
@@ -118,7 +118,7 @@ if [ -d "$venv_dir" ]; then
 else
     python3 -m venv "$venv_dir"
     "$venv_dir/bin/pip" install -U pip setuptools
-    "$venv_dir/bin/pip" install -r $install_files_dir/encoded/requirements.osx.catalina.txt
+    "$venv_dir/bin/pip" install -r $encd_dir/requirements.osx.catalina.txt
 fi
 echo -e "\n"
 echo -e "DONE $msg"
@@ -126,7 +126,8 @@ echo -e "DONE $msg"
 msg='vagrant-install Add helpers to bashrc'
 echo -e "\n\n$msg"
 echo "source $venv_dir/bin/activate" >> "$home_dir/.bashrc"
-echo "alias rebuild_encd='cd $encd_dir && make clean && buildout bootstrap && bin/buildout'" >> "$home_dir/.bashrc"
+echo "alias build_encd='cd $encd_dir && make clean && buildout bootstrap && bin/buildout'" >> "$home_dir/.bashrc"
+echo "alias rebuild_encd='cd $encd_dir && make dev-clean && buildout bootstrap && bin/buildout'" >> "$home_dir/.bashrc"
 echo "alias kill_elasticsearch='pkill -f elasticsearch'" >> "$home_dir/.bashrc"
 echo "alias dev_servers='cd $encd_dir && bin/dev-servers development.ini --app-name app --clear --init --load'" >> "$home_dir/.bashrc"
 echo "alias p_serve='cd $encd_dir && bin/pserve development.ini'"  >> "$home_dir/.bashrc"

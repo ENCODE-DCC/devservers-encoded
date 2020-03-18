@@ -24,6 +24,7 @@ Deploy development servers in Ubuntu 18 on OSX using vagrant and virtual box
     $ cd ~/mywork/devservers-encoded
     $ git clone git@github.com:ENCODE-DCC/devservers-encoded.git
     $ git clone git@github.com:ENCODE-DCC/encoded.git
+    $ git clone git@github.com:ENCODE-DCC/snovault.git
     $ cp devservers-encoded/Vagrantfile ./
     $ vagrant up
 
@@ -32,7 +33,11 @@ Deploy development servers in Ubuntu 18 on OSX using vagrant and virtual box
     # Must be in directry that you called 'vagrant up'
     $ vagrant ssh
 
-    # Build the application
+    # Sym link snovault
+    $ (encoded-venv) vagrant$ mkdir -p /home/vagrant/encoded/develop
+    $ (encoded-venv) vagrant$ ln -s /home/vagrant/snovault /home/vagrant/encoded/develop/snovault
+
+    # Build the application, rebuild makes dev-clean not make clean.
     $ (encoded-venv) vagrant$ rebuild_encd
 
     # Start dev servers
@@ -46,8 +51,18 @@ Deploy development servers in Ubuntu 18 on OSX using vagrant and virtual box
     # Open app in browser
     http://localhost:6543/
 
+## Develop with snovault branch
+    # remove snovault branch
+    $ (encoded-venv) vagrant$ rm /home/vagrant/encoded/develop/snovault
+    # Link local(vagrant home) snovault to develop
+    $ (encoded-venv) vagrant$ ln -s /home/vagrant/encoded/develop/snovault
+    # Optional: rebuild with make dev-clean.  does not overwrite sym link
+    $ (encoded-venv) vagrant$ build_encd
+    # Run dev_servers and p_serve as above
+
+
 ## Development
     * On OSX in the encoded repo make updates to your feature as usuaual
     * On vagrant instances rerun, rebuild_encd, dev_servers, and p_serve as needed to view updates
-    * Also, npm build or npm run dev can be run on vagrant instance as needed.
+    * Also, 'npm build' or 'npm run dev' can be run on vagrant instance as needed.
     * bin/test has not been tested.
