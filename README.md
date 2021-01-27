@@ -34,11 +34,11 @@ Deploy development servers in Ubuntu 18 on OSX using vagrant and virtual box
     $ vagrant ssh
 
     # Sym link snovault
-    $ (encoded-venv) vagrant$ mkdir -p /home/vagrant/encoded/develop
-    $ (encoded-venv) vagrant$ ln -s /home/vagrant/snovault /home/vagrant/encoded/develop/snovault
+    $ (encoded-venv) vagrant$ mkdir -p /home/vagrant/
+    $ (encoded-venv) vagrant$ ln -s /home/vagrant/snovault /home/vagrant/snovault
 
-    # Build the application, rebuild makes dev-clean not make clean.
-    $ (encoded-venv) vagrant$ rebuild_encd
+    # Build the application
+    $ (encoded-venv) vagrant$ build_encd
 
     # Start dev servers
     $ (encoded-venv) vagrant$ dev_servers
@@ -53,16 +53,17 @@ Deploy development servers in Ubuntu 18 on OSX using vagrant and virtual box
 
 ## Develop with snovault branch
     # remove snovault branch
-    $ (encoded-venv) vagrant$ rm /home/vagrant/encoded/develop/snovault
+    $ (encoded-venv) vagrant$ rm /home/vagrant/snovault
     # Link local(vagrant home) snovault to develop
-    $ (encoded-venv) vagrant$ ln -s /home/vagrant/encoded/develop/snovault
-    # Optional: rebuild with make dev-clean.  does not overwrite sym link
+    $ (encoded-venv) vagrant$ ln -s /home/vagrant/snovault
+    # Optional: rebuild with make clean.  does not overwrite sym link
     $ (encoded-venv) vagrant$ build_encd
+    $ (encoded-venv) vagrant$ cd /home/vagrant/snovault && pip install -e '.'
     # Run dev_servers and p_serve as above
 
 
 ## Development
     * On OSX in the encoded repo make updates to your feature as usuaual
-    * On vagrant instances rerun, rebuild_encd, dev_servers, and p_serve as needed to view updates
+    * On vagrant instances rerun, build_encd, dev_servers, and p_serve as needed to view updates
     * Also, 'npm build' or 'npm run dev' can be run on vagrant instance as needed.
-    * bin/test has not been tested.
+    * pytest has not been tested.
